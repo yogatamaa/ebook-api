@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Models\Author;
 class AuthorController extends Controller
 {
     /**
@@ -13,7 +13,14 @@ class AuthorController extends Controller
      */
     public function index()
     {
-        //
+        $table = Author::all();
+        // $data = ["Data" => $siswa];
+        // return $data;
+        return response()->json([
+            "message" => "Load data success",
+            "data" => $table
+        ], 200);
+
     }
 
     /**
@@ -34,7 +41,19 @@ class AuthorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $table = Author::create([
+            "nama" => $request -> nama, 
+            "email" => $request -> email,
+            "gender" => $request -> gender,
+            "no_hp" => $request -> no_hp,
+            "tgl_lahir" => $request -> tgl_lahir,
+            "tmpt_lahir" => $request -> tmpt_lahir,
+
+        ]);
+        return response()->json([
+            "message" => "store success",
+            "data" => $table
+        ], 201);
     }
 
     /**
@@ -45,7 +64,12 @@ class AuthorController extends Controller
      */
     public function show($id)
     {
-        //
+        $table = Author::show($id);
+        if ($table) {
+            return $table ;
+        }else{
+            return [ "message" => "Data not found "];
+        }
     }
 
     /**
@@ -68,7 +92,11 @@ class AuthorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $book2 = Author::findOrFail($id);
+        $book2->update($request->all());
+        $book2->save();
+
+        return $book2;
     }
 
     /**
@@ -79,6 +107,12 @@ class AuthorController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $table = Author::find($id);
+        if($table){
+            $table->delete();
+            return ["message" => "Delete succes"];
+        }else{
+            return ["message" => "Data not found"];
+        }
     }
 }
